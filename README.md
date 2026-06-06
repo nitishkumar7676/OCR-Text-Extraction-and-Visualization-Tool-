@@ -24,3 +24,24 @@ Setup:
 4. Configure .env
 5. Run:
    uvicorn main:app --reload
+
+Project Structure
+OCR/
+│
+├── main.py
+├── database.py
+├── models.py
+├── schemas.py
+├── ocr_processor.py
+├── requirements.txt
+├── Dockerfile
+├── README.md
+│
+├── static/
+│   ├── app.js
+│   └── styles.css
+│
+├── templates/
+│   └── index.html
+│
+└── uploads/
