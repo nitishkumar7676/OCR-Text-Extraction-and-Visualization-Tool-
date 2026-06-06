@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Web Application</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>OCR Text Extraction</h1>
+            <p>Extract text from PDF and TIFF files using advanced OCR</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-card">
+                    <h2>Upload Document</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Drag and drop your PDF or TIFF here</p>
+                        <p class="or-text">or</p>
+                        <button class="btn btn-primary" id="selectFileBtn">Browse Files</button>
+                        <input type="file" id="fileInput" accept=".pdf,.tiff,.tif" hidden>
+                        <p class="file-info">Supported formats: PDF, TIFF (Max 50MB)</p>
+                    </div>
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p id="progressText">Uploading...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="stats-section">
+                <h2>Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="statTotal">0</span>
+                        <span class="stat-label">Total Documents</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="statCompleted">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="statProcessing">0</span>
+                        <span class="stat-label">Processing</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="statFailed">0</span>
+                        <span class="stat-label">Failed</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents List Section -->
+            <section class="documents-section">
+                <div class="section-header">
+                    <h2>Uploaded Documents</h2>
+                    <div class="filter-controls">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
+                    </div>
+                </div>
+
+                <div id="documentsList" class="documents-list">
+                    <p class="empty-message">No documents uploaded yet</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for viewing OCR results -->
+    <div id="resultModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle">OCR Results</h2>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="extracted-text">Extracted Text</button>
+                    <button class="tab-btn" data-tab="bounding-boxes">Bounding Boxes</button>
+                </div>
+
+                <div id="extracted-text" class="tab-content active">
+                    <div class="pages-nav">
+                        <button class="btn btn-small" id="prevPageBtn">← Previous</button>
+                        <span id="pageIndicator">Page 1</span>
+                        <button class="btn btn-small" id="nextPageBtn">Next →</button>
+                    </div>
+                    <div class="extracted-content">
+                        <div class="text-box" id="extractedText"></div>
+                        <div class="confidence-info">
+                            <span>Confidence: <strong id="confidenceScore">0%</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bounding-boxes" class="tab-content">
+                    <div class="bounding-boxes-table">
+                        <table id="boundingBoxesTable">
+                            <thead>
+                                <tr>
+                                    <th>Line Number</th>
+                                    <th>Text</th>
+                                    <th>X</th>
+                                    <th>Y</th>
+                                    <th>Width</th>
+                                    <th>Height</th>
+                                </tr>
+                            </thead>
+                            <tbody id="boundingBoxesBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
